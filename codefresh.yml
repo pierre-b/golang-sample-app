@@ -9,7 +9,7 @@ steps:
   MyAppDockerImage:
     title: Building Docker Multi-stage Image
     type: build
-    image_name: my-golang-image
+    image_name: golang-sample-app
     working_directory: ./
     tag: multi-stage
-    dockerfile: Dockerfile.multistage
+    dockerfile: Dockerfile
