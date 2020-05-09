@@ -7,9 +7,9 @@ steps:
     revision: master
     git: github
   MyAppDockerImage:
-    title: Building Docker Multi-stage Image
+    title: Building Docker Image
     type: build
     image_name: my-golang-image
     working_directory: ./
-    tag: multi-stage
-    dockerfile: Dockerfile.multistage
+    tag: full
+    dockerfile: Dockerfile
