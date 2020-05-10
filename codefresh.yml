@@ -42,7 +42,7 @@ steps:
     title: "Running Deploy Script"
     type: "deploy"
     kind: "kubernetes"
-    cluster: "captainmetrics" #the name specified when you added the cluster
+    cluster: "cm" #the name specified when you added the cluster
     namespace: "default" #the namespace you wish to deploy into
     service: "test" #the service you would like to update the deployment in
     candidate:
