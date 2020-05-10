@@ -1,15 +1,47 @@
-version: '1.0'
+version: "1.0"
+# Stages can help you organize your steps in stages
+stages:
+  - "clone"
+  - "build"
+  - "test"
+  - "deploy"
+
 steps:
-  main_clone:
-    title: Cloning main repository...
-    type: git-clone
-    repo: 'codefresh-contrib/golang-sample-app'
-    revision: master
-    git: github
-  MyAppDockerImage:
-    title: Building Docker Multi-stage Image
-    type: build
-    image_name: golang-sample-app
-    working_directory: ./
-    tag: multi-stage
-    dockerfile: Dockerfile
+  clone:
+    title: "Cloning repository"
+    type: "git-clone"
+    repo: "pierre-b/golang-sample-app"
+    # CF_BRANCH value is auto set when pipeline is triggered
+    # Learn more at codefresh.io/docs/docs/codefresh-yaml/variables/
+    revision: "${{CF_BRANCH}}"
+    git: "github"
+    stage: "clone"
+
+  build:
+    title: "Building Docker image"
+    type: "build"
+    image_name: "pierreb/cm"
+    working_directory: "${{clone}}"
+    tag: "${{CF_BRANCH_TAG_NORMALIZED}}"
+    dockerfile: "Dockerfile"
+    stage: "build"
+
+  test:
+    title: "Running test"
+    type: "freestyle" # Run any command
+    image: "ubuntu:latest" # The image in which command will be executed
+    working_directory: "${{clone}}" # Running command where code cloned
+    commands:
+      - "ls"
+    stage: "test"
+
+  deploy:
+    title: Running Deploy Script
+    type: deploy
+    kind: kubernetes
+    cluster: "captainmetrics" #the name specified when you added the cluster
+    namespace: "default" #the namespace you wish to deploy into
+    service: "test" #the service you would like to update the deployment in
+    candidate:
+      image: '${{BuildImage}}'
+      registry: 'dockerhub'
